@@ -13,8 +13,7 @@ SPRITE_CACHE = None
 
 def save(data, endpoint, resource_id=None, subresource=None):
 
-    print("CACHING-YO")
-    
+    print("Saving")
     if data == dict():  # No point in saving empty data.
         return None
 
@@ -52,6 +51,7 @@ def save_sprite(data, sprite_type, sprite_id, **kwargs):
 
 def load(endpoint, resource_id=None, subresource=None):
 
+    print("Loading")
     uri = cache_uri_build(endpoint, resource_id, subresource)
 
     try:
