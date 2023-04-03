@@ -13,6 +13,8 @@ SPRITE_CACHE = None
 
 def save(data, endpoint, resource_id=None, subresource=None):
 
+    print("CACHING-YO")
+    
     if data == dict():  # No point in saving empty data.
         return None
 
