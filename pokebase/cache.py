@@ -9,11 +9,10 @@ from .common import cache_uri_build, sprite_filepath_build
 CACHE_DIR = None
 API_CACHE = None
 SPRITE_CACHE = None
-
+CACHE = None
 
 def save(data, endpoint, resource_id=None, subresource=None):
-
-    print("Saving")
+    print('s')
     if data == dict():  # No point in saving empty data.
         return None
 
@@ -23,8 +22,7 @@ def save(data, endpoint, resource_id=None, subresource=None):
     uri = cache_uri_build(endpoint, resource_id, subresource)
 
     try:
-        with shelve.open(API_CACHE) as cache:
-            cache[uri] = data
+        CACHE[uri] = data
     except OSError as error:
         if error.errno == 11:  # Cache open by another person/program
             # print('Cache unavailable, skipping save')
@@ -51,12 +49,11 @@ def save_sprite(data, sprite_type, sprite_id, **kwargs):
 
 def load(endpoint, resource_id=None, subresource=None):
 
-    print("Loading")
+    print("L", end="")
     uri = cache_uri_build(endpoint, resource_id, subresource)
 
     try:
-        with shelve.open(API_CACHE) as cache:
-            return cache[uri]
+        return CACHE[uri]
     except OSError as error:
         if error.errno == 11:
             # Cache open by another person/program
@@ -133,7 +130,7 @@ def set_cache(new_path=None):
     :return: str, str
     """
 
-    global CACHE_DIR, API_CACHE, SPRITE_CACHE
+    global CACHE_DIR, API_CACHE, SPRITE_CACHE, CACHE
 
     if new_path is None:
         new_path = get_default_cache()
@@ -141,6 +138,7 @@ def set_cache(new_path=None):
     CACHE_DIR = safe_make_dirs(os.path.abspath(new_path))
     API_CACHE = os.path.join(CACHE_DIR, "api.cache")
     SPRITE_CACHE = safe_make_dirs(os.path.join(CACHE_DIR, "sprite"))
+    CACHE = shelve.open(API_CACHE)
 
     return CACHE_DIR, API_CACHE, SPRITE_CACHE
 
